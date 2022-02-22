@@ -9,9 +9,9 @@ class AuthorApi {
     return 'https://images.quotable.dev/profile/400/$slug.jpg';
   }
 
-  Future<Authors> getAuthors([page = 1]) async {
+  Future<Authors> getAuthors() async {
     final response = await client.get(
-      Uri.parse('https://quotable.io/authors?page=$page'),
+      Uri.parse('https://quotable.io/authors'),
     );
     if (response.statusCode == 200) {
       final body = jsonDecode(response.body);

@@ -15,8 +15,7 @@ void main() {
   group('API tests', () {
     test('Get authors from API', () async {
       final client = MockClient();
-      when(client.get(Uri.parse('https://quotable.io/authors?page=1')))
-          .thenAnswer(
+      when(client.get(Uri.parse('https://quotable.io/authors'))).thenAnswer(
         (_) async => http.Response(
           File('test/test_resources/authors.json').readAsStringSync(),
           200,
@@ -38,8 +37,7 @@ void main() {
 
     test('throws an exception if we get an error', () async {
       final client = MockClient();
-      when(client.get(Uri.parse('https://quotable.io/authors?page=1')))
-          .thenAnswer(
+      when(client.get(Uri.parse('https://quotable.io/authors'))).thenAnswer(
         (realInvocation) async => http.Response('Not found', 400),
       );
       expect(await AuthorApi(client).getAuthors(), throwsException);
@@ -47,8 +45,7 @@ void main() {
 
     test('test if list of authors are emitted from the bloc', () async {
       final client = MockClient();
-      when(client.get(Uri.parse('https://quotable.io/authors?page=1')))
-          .thenAnswer(
+      when(client.get(Uri.parse('https://quotable.io/authors'))).thenAnswer(
         (_) async => http.Response(
           File('test/test_resources/authors.json').readAsStringSync(),
           200,

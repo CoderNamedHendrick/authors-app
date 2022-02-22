@@ -1,6 +1,5 @@
 import 'package:codemagic_test/api/author_api.dart';
 import 'package:codemagic_test/models/author.dart';
-import 'package:codemagic_test/views/wiki_webview.dart';
 import 'package:flutter/material.dart';
 
 class AuthorDetailsScreen extends StatelessWidget {
@@ -25,11 +24,14 @@ class AuthorDetailsScreen extends StatelessWidget {
                 AuthorApi.authorImage(author.slug),
                 fit: BoxFit.cover,
               ),
-              title: Text(
-                author.name,
-                style: Theme.of(context).textTheme.headline5?.copyWith(
-                      color: Colors.white,
-                    ),
+              title: Hero(
+                tag: author.slug,
+                child: Text(
+                  author.name,
+                  style: Theme.of(context).textTheme.headline5?.copyWith(
+                        color: Colors.white,
+                      ),
+                ),
               ),
             ),
           ),
@@ -52,65 +54,50 @@ class AuthorDetails extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Name',
                 style: Theme.of(context).textTheme.headline6,
               ),
-              Hero(
-                tag: author.slug,
-                child: Text(
-                  author.name,
-                  style: Theme.of(context).textTheme.headline5,
-                ),
+              const SizedBox(width: 12),
+              Text(
+                author.name,
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                      fontSize: 18,
+                    ),
               ),
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'Description',
                 style: Theme.of(context).textTheme.headline6,
               ),
-              Text(
-                author.description,
-                style: Theme.of(context).textTheme.headline6,
-              ),
-            ],
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Bio',
-                style: Theme.of(context).textTheme.headline6,
-              ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 12),
               Expanded(
-                  child: Text(
-                author.bio,
-                key: const ValueKey('bio-info'),
-                style: Theme.of(context).textTheme.subtitle1,
-              )),
+                child: Text(
+                  author.description,
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                        fontSize: 18,
+                      ),
+                ),
+              ),
             ],
           ),
-          const Spacer(),
-          GestureDetector(
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => Wiki(wikiUrl: author.link),
-              ),
-            ),
+          Text(
+            'Bio',
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          const SizedBox(height: 12),
+          Expanded(
             child: Text(
-              'click this text to read wiki',
-              style: Theme.of(context).textTheme.subtitle2?.copyWith(
-                    color: Colors.blueAccent,
-                    decoration: TextDecoration.underline,
-                  ),
+              author.bio,
+              key: const ValueKey('bio-info'),
+              style: Theme.of(context).textTheme.subtitle1,
             ),
           ),
         ],

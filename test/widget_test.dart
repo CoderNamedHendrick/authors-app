@@ -30,8 +30,7 @@ void main() {
   testWidgets('Populating the authors listViews', (WidgetTester tester) async {
     List<Author> authors = [];
     final client = MockClient();
-    when(client.get(Uri.parse('https://quotable.io/authors?page=1')))
-        .thenAnswer(
+    when(client.get(Uri.parse('https://quotable.io/authors'))).thenAnswer(
       (_) async => http.Response(
         File('test/test_resources/authors.json').readAsStringSync(),
         200,
@@ -63,8 +62,7 @@ void main() {
       (WidgetTester tester) async {
     List<Author> authors = [];
     final client = MockClient();
-    when(client.get(Uri.parse('https://quotable.io/authors?page=1')))
-        .thenAnswer(
+    when(client.get(Uri.parse('https://quotable.io/authors'))).thenAnswer(
       (_) async => http.Response(
         File('test/test_resources/authors.json').readAsStringSync(),
         200,
