@@ -1,8 +1,8 @@
-import 'package:codemagic_test/api/author_api.dart';
 import 'package:codemagic_test/api/author_bloc.dart';
 import 'package:codemagic_test/models/author.dart';
 import 'package:codemagic_test/views/author_detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 class AuthorsScreen extends StatefulWidget {
   const AuthorsScreen({Key? key}) : super(key: key);
@@ -17,7 +17,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
   @override
   void initState() {
     super.initState();
-    _bloc = AuthorsBloc();
+    _bloc = AppBloc(Client());
     _bloc.getAuthors();
   }
 
@@ -39,33 +39,18 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               final data = snapshot.data!;
-              return ListView.builder(
-                key: const ValueKey('authors-list'),
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            AuthorDetails(author: data[index]),
-                      ),
-                    ),
-                    leading: Hero(
-                      tag: data[index].slug,
-                      child: Image.network(
-                        AuthorApi.authorImage(data[index].slug),
-                      ),
-                    ),
-                    title: Text(
-                      data[index].name,
-                      style: Theme.of(context).textTheme.headline6,
-                    ),
-                    subtitle: Text(
-                      data[index].description,
-                      style: Theme.of(context).textTheme.subtitle1,
-                    ),
-                  );
-                },
-                itemCount: data.length,
+              return AuthorsListView(
+                data: data,
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                child: Text(
+                  '${snapshot.error}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6
+                      ?.copyWith(color: Colors.redAccent),
+                ),
               );
             } else {
               return const Center(
@@ -74,6 +59,47 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
             }
           },
         ),
+      ),
+    );
+  }
+}
+
+class AuthorsListView extends StatelessWidget {
+  const AuthorsListView({Key? key, required this.data}) : super(key: key);
+  final List<Author> data;
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      child: ListView.builder(
+        key: const ValueKey('authors-list'),
+        itemBuilder: (context, index) {
+          return ListTile(
+            key: ValueKey('author-$index'),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => AuthorDetailsScreen(author: data[index]),
+              ),
+            ),
+            // leading: Hero(
+            //   tag: data[index].slug,
+            //   child: Image.network(
+            //     AuthorApi.authorImage(data[index].slug),
+            //   ),
+            // ),
+            title: Hero(
+              tag: data[index].slug,
+              child: Text(
+                data[index].name,
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+            subtitle: Text(
+              data[index].description,
+              style: Theme.of(context).textTheme.subtitle1,
+            ),
+          );
+        },
+        itemCount: data.length,
       ),
     );
   }

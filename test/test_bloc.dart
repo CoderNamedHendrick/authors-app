@@ -1,15 +1,9 @@
-import 'dart:async';
 import 'package:codemagic_test/api/author_api.dart';
-import 'package:codemagic_test/models/author.dart';
+import 'package:codemagic_test/api/author_bloc.dart';
 import 'package:http/http.dart' as http;
 
-abstract class AuthorsBloc {
-  StreamController<List<Author>> authorsController = StreamController();
-  Future<void> getAuthors();
-}
-
-class AppBloc extends AuthorsBloc {
-  AppBloc(http.Client client) {
+class TestBloc extends AuthorsBloc {
+  TestBloc(http.Client client) {
     _api = AuthorApi(client);
   }
   late final AuthorApi _api;
