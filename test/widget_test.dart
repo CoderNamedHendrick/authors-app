@@ -6,17 +6,14 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'dart:io';
-
 import 'package:codemagic_test/api/author_api.dart';
 import 'package:codemagic_test/models/author.dart';
 import 'package:codemagic_test/views/author_detail_screen.dart';
 import 'package:codemagic_test/views/authors_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:codemagic_test/main.dart';
 import 'package:mockito/mockito.dart';
-
 import 'api_test.mocks.dart';
 import 'package:http/http.dart' as http;
 
@@ -27,59 +24,57 @@ void main() {
     expect(find.text('Exception: Failed to get authors'), findsOneWidget);
   });
 
-  testWidgets('Populating the authors listViews', (WidgetTester tester) async {
-    List<Author> authors = [];
+  group('Tests with mocked client', () {
     final client = MockClient();
-    when(client.get(Uri.parse('https://quotable.io/authors'))).thenAnswer(
-      (_) async => http.Response(
-        File('test/test_resources/authors.json').readAsStringSync(),
-        200,
-        headers: {
-          HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
-        },
+
+    setUp(
+      () =>
+          when(client.get(Uri.parse('https://quotable.io/authors'))).thenAnswer(
+        (_) async => http.Response(
+          File('test/test_resources/authors.json').readAsStringSync(),
+          200,
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
+          },
+        ),
       ),
     );
-    final response = await AuthorApi(client).getAuthors();
-    authors = response.results;
-    final listFinder = find.byType(Scrollable);
-    final itemFinder = find.byKey(const ValueKey('author-10'));
 
-    await tester.pumpWidget(
-      MaterialApp(
-        home: AuthorsListView(data: authors),
-      ),
-    );
-    await tester.scrollUntilVisible(
-      itemFinder,
-      500.0,
-      scrollable: listFinder,
-    );
+    testWidgets('Populating the authors listViews',
+        (WidgetTester tester) async {
+      List<Author> authors = [];
+      final response = await AuthorApi(client).getAuthors();
+      authors = response.results;
+      final listFinder = find.byType(Scrollable);
+      final itemFinder = find.byKey(const ValueKey('author-10'));
 
-    expect(itemFinder, findsOneWidget);
-  });
+      await tester.pumpWidget(
+        MaterialApp(
+          home: AuthorsListView(data: authors),
+        ),
+      );
+      await tester.scrollUntilVisible(
+        itemFinder,
+        500.0,
+        scrollable: listFinder,
+      );
 
-  testWidgets('Check if information in detail screen is displayed currently',
-      (WidgetTester tester) async {
-    List<Author> authors = [];
-    final client = MockClient();
-    when(client.get(Uri.parse('https://quotable.io/authors'))).thenAnswer(
-      (_) async => http.Response(
-        File('test/test_resources/authors.json').readAsStringSync(),
-        200,
-        headers: {
-          HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8',
-        },
-      ),
-    );
-    final response = await AuthorApi(client).getAuthors();
-    authors = response.results;
+      expect(itemFinder, findsOneWidget);
+    });
 
-    await tester.pumpWidget(MaterialApp(
-      home: AuthorDetails(author: authors[0]),
-    ));
+    testWidgets('Check if information in detail screen is displayed currently',
+        (WidgetTester tester) async {
+      List<Author> authors = [];
+      final response = await AuthorApi(client).getAuthors();
+      authors = response.results;
 
-    expect(find.text(authors[0].name), findsOneWidget);
-    expect(find.text(authors[0].description), findsOneWidget);
-    expect(find.text(authors[0].bio), findsOneWidget);
+      await tester.pumpWidget(MaterialApp(
+        home: AuthorDetails(author: authors[0]),
+      ));
+
+      expect(find.text(authors[0].name), findsOneWidget);
+      expect(find.text(authors[0].description), findsOneWidget);
+      expect(find.text(authors[0].bio), findsOneWidget);
+    });
   });
 }

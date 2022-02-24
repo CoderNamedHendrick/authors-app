@@ -2,7 +2,6 @@ import 'package:codemagic_test/api/author_bloc.dart';
 import 'package:codemagic_test/models/author.dart';
 import 'package:codemagic_test/views/author_detail_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 
 class AuthorsScreen extends StatefulWidget {
   const AuthorsScreen({Key? key}) : super(key: key);
@@ -17,7 +16,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
   @override
   void initState() {
     super.initState();
-    _bloc = AppBloc(Client());
+    _bloc = AppBloc();
     _bloc.getAuthors();
   }
 

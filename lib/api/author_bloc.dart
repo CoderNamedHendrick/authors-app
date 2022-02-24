@@ -9,7 +9,8 @@ abstract class AuthorsBloc {
 }
 
 class AppBloc extends AuthorsBloc {
-  AppBloc(http.Client client) {
+  AppBloc() {
+    final client = http.Client();
     _api = AuthorApi(client);
   }
   late final AuthorApi _api;
