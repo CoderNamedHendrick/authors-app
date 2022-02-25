@@ -17,6 +17,8 @@ import 'package:mockito/mockito.dart';
 import 'api_test.mocks.dart';
 import 'package:http/http.dart' as http;
 
+import 'test_bloc.dart';
+
 void main() {
   testWidgets('Show Exception', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
@@ -75,6 +77,20 @@ void main() {
       expect(find.text(authors[0].name), findsOneWidget);
       expect(find.text(authors[0].description), findsOneWidget);
       expect(find.text(authors[0].bio), findsOneWidget);
+    });
+
+    testWidgets('screen works ', (WidgetTester tester) async {
+      final bloc = TestBloc();
+
+      final listFinder = find.byType(Scrollable);
+      final itemFinder = find.byKey(const ValueKey('author-10'));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: AuthorsScreen(bloc: bloc),
+        ),
+      );
+
+      expect(find.byKey(const ValueKey('authors-builder')), findsOneWidget);
     });
   });
 }

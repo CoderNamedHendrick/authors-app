@@ -38,7 +38,7 @@ void main() {
     when(client.get(Uri.parse('https://quotable.io/authors'))).thenAnswer(
       (_) async => http.Response('Not found', 400),
     );
-    expect(await AuthorApi(client).getAuthors(), throwsException);
+    expect(AuthorApi(client).getAuthors(), throwsException);
   });
 
   test('test if list of authors are emitted from the bloc', () async {

@@ -4,7 +4,8 @@ import 'package:codemagic_test/views/author_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class AuthorsScreen extends StatefulWidget {
-  const AuthorsScreen({Key? key}) : super(key: key);
+  const AuthorsScreen({Key? key, required this.bloc}) : super(key: key);
+  final AuthorsBloc bloc;
 
   @override
   State<AuthorsScreen> createState() => _AuthorsScreenState();
@@ -16,7 +17,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
   @override
   void initState() {
     super.initState();
-    _bloc = AppBloc();
+    _bloc = widget.bloc;
     _bloc.getAuthors();
   }
 
@@ -34,6 +35,7 @@ class _AuthorsScreenState extends State<AuthorsScreen> {
       body: RefreshIndicator(
         onRefresh: _bloc.getAuthors,
         child: StreamBuilder<List<Author>>(
+          key: const ValueKey('authors-builder'),
           stream: _bloc.authorsController.stream,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
