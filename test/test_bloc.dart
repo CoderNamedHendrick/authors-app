@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:codemagic_test/api/author_api.dart';
-import 'package:codemagic_test/api/author_bloc.dart';
+import 'package:codemagic_test/models/author_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:mockito/mockito.dart';
 

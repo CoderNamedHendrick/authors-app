@@ -1,4 +1,4 @@
-import 'package:codemagic_test/api/author_bloc.dart';
+import 'package:codemagic_test/models/author_bloc.dart';
 import 'package:codemagic_test/models/author.dart';
 import 'package:codemagic_test/views/author_detail_screen.dart';
 import 'package:flutter/material.dart';

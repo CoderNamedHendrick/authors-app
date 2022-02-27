@@ -24,13 +24,6 @@ void main() {
     );
 
     expect(await AuthorApi(client).getAuthors(), isA<Authors>());
-    // final response = await AuthorApi(client).getAuthors();
-    // final response = await http.get(
-    //   Uri.parse('https://quotable.io/authors'),
-    // );
-    // print(response.body);
-
-    // print(authors);
   });
 
   test('throw an exception if we get an error', () async {
